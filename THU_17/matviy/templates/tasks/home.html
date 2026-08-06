@@ -231,6 +231,46 @@
     align-items: center;
   }
 
+  /* ===== CARDS SWIPER ===== */
+  .mono-landing .cards-swiper-wrap{position:relative; padding:0 64px;}
+  .mono-landing .cardsSwiper{overflow:hidden; padding:10px 0 8px;}
+  .mono-landing .cardsSwiper .swiper-slide{
+    width:320px; display:flex; flex-direction:column; align-items:center; text-align:center;
+  }
+  .mono-landing .card-image-wrap{
+    width:100%; height:200px; display:flex; align-items:center; justify-content:center; margin-bottom:22px;
+  }
+  .mono-landing .card-image-wrap img{max-width:100%; max-height:100%; width:auto; object-fit:contain;}
+  .mono-landing .card-title{font-size:19px; font-weight:700; margin-bottom:8px; font-family:'Inter'; letter-spacing:0;}
+  .mono-landing .card-desc{color:var(--gray); font-size:14.5px; line-height:1.55; max-width:280px; margin:0 auto;}
+  .mono-landing .card-desc b{font-weight:500;}
+
+  .mono-landing .cards-swiper-wrap .swiper-button-prev,
+  .mono-landing .cards-swiper-wrap .swiper-button-next{
+    width:44px; height:44px; margin-top:-22px; border-radius:50%;
+    background:#fff; border:1px solid var(--line); box-shadow:0 10px 24px rgba(0,0,0,.08);
+  }
+  .mono-landing .cards-swiper-wrap .swiper-button-prev:after,
+  .mono-landing .cards-swiper-wrap .swiper-button-next:after{
+    font-size:14px; font-weight:900; color:var(--ink);
+  }
+  .mono-landing .cards-swiper-wrap .swiper-button-prev{left:0;}
+  .mono-landing .cards-swiper-wrap .swiper-button-next{right:0;}
+  .mono-landing .cards-swiper-wrap .swiper-button-disabled{opacity:.35;}
+
+  .mono-landing .cards-swiper-wrap .swiper-pagination-progressbar{
+    position:relative; top:auto; left:auto; width:100%; max-width:280px; margin:22px auto 0;
+    height:4px; background:var(--line); border-radius:4px;
+  }
+  .mono-landing .cards-swiper-wrap .swiper-pagination-progressbar-fill{
+    background:var(--coral); border-radius:4px;
+  }
+
+  @media (max-width:900px){
+    .mono-landing .cards-swiper-wrap{padding:0 44px;}
+    .mono-landing .cardsSwiper .swiper-slide{width:260px;}
+  }
+
   @media (max-width:900px){
     .mono-landing .hero-nav{flex-wrap:wrap; gap:14px; padding-top:20px;}
     .mono-landing .hero-nav .links{order:3; width:100%; overflow-x:auto;}
@@ -270,7 +310,7 @@
         </div>
         <div class="links">
           <a href="#" class="active">Приватним особам</a>
-          <a href="#features">Бізнесу</a>
+          <a>Бізнесу</a>
           <a href="#support">Про нас</a>
         </div>
       </div>
@@ -278,9 +318,18 @@
         <div>
           <h1>Раз-два,<br>і банк<br>у телефоні</h1>
           <p>Встановлюйте застосунок і користуйтеся карткою за кілька хвилин.</p>
-          <div class="hero-cta">
-            <a class="btn-mono btn-mono-primary" href="{% url 'tasks:register' %}">Завантажити застосунок</a>
-          </div>
+          <div class="cta-action-wrapper">
+      <button type="button" class="btn-mono btn-mono-primary" id="openAccountBtn">
+        Завантажити застосунок &rarr;
+      </button>
+
+      <div class="app-toast" id="appToast">
+        <div class="toast-icon">📱</div>
+        <div class="toast-text">
+          Перейди до Google Play або App Store, щоб завантажити застосунок.Якщо виникнуть якісь проблеми, напиши до нас у бот "@monobankbot" у телеграмі
+        </div>
+      </div>
+    </div>
           <div class="hero-note">Без черг · без відділень · без зайвих запитань</div>
         </div>
 
@@ -380,6 +429,14 @@
 
   <!-- JAR SECTION -->
   <section class="section" id="jar">
+    <div class="wrap bank-row">
+      <div class="section-head bank-content">
+        <span class="kicker">Ті самі Банки</span>
+        <h4>Зручно накопичувати, зручно поширювати, зручно відстежувати прогрес. Для зборів або власних потреб</h4>
+        <p>Ми підключили вже більше 1 300 фондів</p>
+        <p>Щомісяця більше 1,6 млн людей донатять на Банки</p>
+        <p>Загальна сума донатів — 100 мільярдів гривень</p>
+      </div>
     <div class="jar-card-dark">
       <h3>Накопичення в Банці</h3>
       <p>Зібрано на виконання спільних завдань: <b id="jarCur">8 400 ₴</b></p>
@@ -456,12 +513,50 @@
         <input type="range" id="jarSlider" min="0" max="100" value="42" style="width: 100%;">
       </div>
     </div>
+    </div>
   </section>
+<style>
+.bank-row {
+  display: flex;
+  align-items: center; /* вирівнює текст і банку по вертикальному центру */
+  justify-content: space-between;
+  gap: 48px;
+}
+
+.bank-content {
+  flex: 1;
+  max-width: 480px;
+  margin-bottom: 0; /* перебиваємо margin-bottom від .section-head */
+}
+
+.jar-card-dark {
+  flex-shrink: 0;
+  margin: 0; /* прибираємо margin: 20px auto, він більше не потрібен */
+}
+
+@media (max-width: 900px) {
+  .bank-row {
+    flex-direction: column;
+  }
+  .bank-content {
+    max-width: 100%;
+    text-align: center;
+  }
+}
+</style>
 
   <!-- CARDS SWIPER SECTION -->
   <section class="section" id="cards">
-    <div class="swiper cardsSwiper">
-      <div class="swiper-wrapper">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">Картки</span>
+        <h2>Наша гордість-<b>картки</b> в них ми вклали усю душу,</h2>
+        <p>Унікальні скіни, можливості та особливості кожної з карток</p>
+      </div>
+
+      <div class="cards-swiper-wrap">
+        <div class="swiper cardsSwiper">
+          <div class="swiper-wrapper">
 
         <div class="swiper-slide">
           <div class="card-image-wrap"><img src="{% static 'img/1.png' %}" alt="Чорна картка"></div>
@@ -543,11 +638,13 @@
           </div>
         </div>
 
-      </div>
+          </div>
+        </div>
 
-      <div class="swiper-button-prev"></div>
-      <div class="swiper-button-next"></div>
-      <div class="swiper-pagination"></div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-pagination"></div>
+      </div>
     </div>
   </section>
 
@@ -641,17 +738,20 @@
   document.addEventListener('DOMContentLoaded', function () {
     // 1. Инициализация карусели карт
     const swiper = new Swiper('.cardsSwiper', {
-      slidesPerView: 'auto',
-      centeredSlides: true,
-      spaceBetween: 30,
+      slidesPerView: 1,
+      spaceBetween: 24,
       loop: true,
+      breakpoints: {
+        640:  { slidesPerView: 2 },
+        1000: { slidesPerView: 3 },
+      },
       navigation: {
         nextEl: '.swiper-button-next',
         prevEl: '.swiper-button-prev',
       },
       pagination: {
         el: '.swiper-pagination',
-        clickable: true,
+        type: 'progressbar',
       },
     });
 
