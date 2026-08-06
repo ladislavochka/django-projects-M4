@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Коментар | СмакоПлан{% endblock %}
+{% block page_kicker %}Коментар{% endblock %}
+{% block page_title %}Редагувати коментар{% endblock %}
+
+{% block content %}
+<section class="market-panel">
+    <form method="post" class="stacked-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Оновити</button>
+        </div>
+    </form>
+</section>
+{% endblock %}

@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ task.title }} | СмакоПлан{% endblock %}
+{% block page_kicker %}Картка задачі{% endblock %}
+{% block page_title %}{{ task.title }}{% endblock %}
+{% block page_actions %}
+    <a href="{% url 'tasks:task-list' %}" class="btn btn-outline-secondary">До списку</a>
+    {% if user.is_authenticated and user == task.creator %}
+        <a href="{% url 'tasks:task-update' task.id %}" class="btn btn-warning">Редагувати</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="detail-grid">
+    <article class="market-panel detail-main">
+        <div class="task-meta">
+            <span class="badge badge-status status-{{ task.status }}">{{ task.get_status_display }}</span>
+            <span class="badge priority-{{ task.priority }}">{{ task.get_priority_display }}</span>
+            {% if task.due_date %}
+                <span class="due-chip {% if task.is_overdue %}is-overdue{% endif %}">до {{ task.due_date|date:"d.m.Y" }}</span>
+            {% endif %}
+        </div>
+        <p class="detail-description">{{ task.description|linebreaksbr }}</p>
+        <div class="form-actions mt-3">
+            {% if user.is_authenticated and user == task.creator and task.status != 'finish' %}
+                <form action="{% url 'tasks:task-complete' task.pk %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success">Позначити виконаною</button>
+                </form>
+            {% endif %}
+            {% if user.is_authenticated and user == task.creator %}
+                <a href="{% url 'tasks:task-delete' task.id %}" class="btn btn-danger">Видалити</a>
+            {% endif %}
+        </div>
+    </article>
+
+    <aside class="market-panel detail-side">
+        <dl>
+            <div>
+                <dt>Автор</dt>
+                <dd>{{ task.creator.username }}</dd>
+            </div>
+            <div>
+                <dt>Статус</dt>
+                <dd>{{ task.get_status_display }}</dd>
+            </div>
+            <div>
+                <dt>Пріоритет</dt>
+                <dd>{{ task.get_priority_display }}</dd>
+            </div>
+            <div>
+                <dt>Дедлайн</dt>
+                <dd>{% if task.due_date %}{{ task.due_date|date:"d.m.Y" }}{% else %}Без дати{% endif %}</dd>
+            </div>
+        </dl>
+    </aside>
+</div>
+
+<section>
+    <div class="section-head">
+        <h2>Коментарі</h2>
+    </div>
+    <div class="comment-list">
+        {% for comment in task.comments.all %}
+            <article class="comment-card">
+                <div class="comment-head">
+                    <strong>{{ comment.author.username }}</strong>
+                    <time datetime="{{ comment.created_at|date:'c' }}">{{ comment.created_at|date:"d.m.Y H:i" }}</time>
+                </div>
+                <p>{{ comment.text|linebreaksbr }}</p>
+                {% if comment.media %}
+                    <p><a href="{{ comment.media.url }}" target="_blank" rel="noopener">Вкладення</a></p>
+                {% endif %}
+                <div class="comment-actions">
+                    {% if user.is_authenticated %}
+                        <form action="{% url 'tasks:comment-like-toggle' comment.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-success btn-sm">
+                                Підтримати ({{ comment.likes.count }})
+                            </button>
+                        </form>
+                    {% endif %}
+                    {% if user.is_authenticated and comment.author == user %}
+                        <a href="{% url 'tasks:edit_comment' comment.id %}" class="btn btn-outline-secondary btn-sm">Редагувати</a>
+                        <a href="{% url 'tasks:delete_comment' comment.id %}" class="btn btn-danger btn-sm">Видалити</a>
+                    {% endif %}
+                </div>
+            </article>
+        {% empty %}
+            <div class="empty-state">Коментарів поки немає.</div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="market-panel">
+    <div class="section-head">
+        <h2>Додати коментар</h2>
+    </div>
+    {% if user.is_authenticated %}
+        <form action="{% url 'tasks:task-detail' task.id %}" method="post" enctype="multipart/form-data" class="stacked-form">
+            {% csrf_token %}
+            {{ comment_form.non_field_errors }}
+            {% for field in comment_form %}
+                <div class="field-group">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.errors %}<div class="field-errors">{{ field.errors }}</div>{% endif %}
+                </div>
+            {% endfor %}
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Надіслати</button>
+            </div>
+        </form>
+    {% else %}
+        <p class="detail-description"><a href="{% url 'tasks:login' %}">Увійдіть</a>, щоб залишити коментар.</p>
+    {% endif %}
+</section>
+{% endblock %}

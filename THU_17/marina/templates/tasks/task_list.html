@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2 class="mb-4">Список завдань</h2>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <a href="{% url 'tasks:task-create' %}" class="btn btn-primary">
+        + Додати завдання
+    </a>
+
+    <form method="get" class="d-flex align-items-center">
+
+        {{ form.status }}
+
+        <button type="submit" class="btn btn-primary ms-2">
+            Фільтрувати
+        </button>
+
+    </form>
+
+</div>
+
+{% if tasks %}
+
+<div class="row">
+
+    {% for task in tasks %}
+
+    <div class="col-md-6 mb-4">
+
+        <div class="card h-100">
+
+            <div class="card-body">
+
+                <h4 class="card-title">
+                    <a href="{% url 'tasks:task-detail' task.pk %}" class="text-dark text-decoration-none">
+                        {{ task.title }}
+                    </a>
+                </h4>
+
+                <hr>
+
+                <p>
+                    <strong>Статус:</strong>
+                    <span class="badge bg-dark">
+                        {{ task.status }}
+                    </span>
+                </p>
+
+                <p>
+                    <strong>Пріоритет:</strong>
+                    <span class="badge bg-secondary">
+                        {{ task.priority }}
+                    </span>
+                </p>
+
+            </div>
+
+            <div class="card-footer bg-white border-0">
+
+                <form action="{% url 'tasks:task-complete' task.pk %}" method="post">
+
+                    {% csrf_token %}
+
+                    <button class="btn btn-outline-dark w-100">
+                        ✓ Позначити виконаним
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% else %}
+
+<div class="alert alert-light border text-center">
+
+    Завдань поки що немає
+
+</div>
+
+{% endif %}
+
+{% endblock %}
