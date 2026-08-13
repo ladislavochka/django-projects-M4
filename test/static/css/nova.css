@@ -1,0 +1,117 @@
+:root {
+    --nova-red: #E30613;
+    --nova-dark: #1f1f1f;
+    --nova-gray: #6c757d;
+    --nova-bg: #f5f5f5;
+    --nova-border: #e9ecef;
+}
+
+body {
+    background: var(--nova-bg);
+    color: var(--nova-dark);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.nova-navbar {
+    background: var(--nova-red);
+    box-shadow: 0 2px 12px rgba(0,0,0,.12);
+}
+
+.nova-logo {
+    font-size: 18px;
+    margin-right: 8px;
+}
+
+.nova-card {
+    background: #fff;
+    border: 1px solid var(--nova-border);
+    border-radius: 16px;
+    box-shadow: 0 6px 18px rgba(0,0,0,.05);
+}
+
+.nova-card-header {
+    padding: 24px 28px;
+    border-bottom: 1px solid var(--nova-border);
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.nova-card-body {
+    padding: 28px;
+}
+
+.form-control,
+.form-select {
+    border-radius: 12px;
+    border: 1px solid #dcdfe3;
+    padding: 12px 14px;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--nova-red);
+    box-shadow: 0 0 0 .2rem rgba(227,6,19,.15);
+}
+
+.btn-nova {
+    background: var(--nova-red);
+    color: white;
+    border-radius: 12px;
+    padding: 12px 18px;
+    border: none;
+    font-weight: 600;
+}
+
+.btn-nova:hover {
+    background: #c50511;
+    color: white;
+}
+
+.task-card {
+    background: white;
+    border-radius: 16px;
+    padding: 22px;
+    border: 1px solid var(--nova-border);
+    transition: .2s;
+}
+
+.task-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(0,0,0,.08);
+}
+
+.priority-high {
+    color: #dc3545;
+    font-weight: 700;
+}
+
+.priority-medium {
+    color: #fd7e14;
+    font-weight: 700;
+}
+
+.priority-low {
+    color: #198754;
+    font-weight: 700;
+}
+
+.badge-status {
+    background: rgba(227,6,19,.08);
+    color: var(--nova-red);
+    border-radius: 999px;
+    padding: 8px 12px;
+    font-weight: 600;
+}
+
+.page-title {
+    font-size: 34px;
+    font-weight: 700;
+    margin-bottom: 28px;
+}
+
+.nova-input-group {
+    background: white;
+    border-radius: 16px;
+    border: 1px solid var(--nova-border);
+    padding: 18px;
+}
