@@ -1,0 +1,372 @@
+{% extends 'base.html' %}
+
+{% block title %}Редагування — BAZHANE{% endblock %}
+
+{% block content %}
+
+<style>
+    .form-page {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 25px 14px 60px;
+    }
+
+    .form-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        border-bottom: 1px solid #111;
+        padding-bottom: 18px;
+        margin-bottom: 35px;
+    }
+
+    .form-number {
+        font-size: 11px;
+        color: #777;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+    }
+
+    .form-title {
+        margin: 0;
+        font-size: clamp(34px, 5vw, 60px);
+        font-weight: 400;
+        line-height: 0.95;
+        text-transform: uppercase;
+    }
+
+    .back-link {
+        color: #555;
+        text-decoration: none;
+        font-size: 11px;
+        text-transform: uppercase;
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 4px;
+    }
+
+    .task-form {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 45px;
+    }
+
+    .form-main,
+    .form-sidebar {
+        border-top: 1px solid #ddd;
+    }
+
+    .form-field {
+        padding: 18px 0;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .form-field label {
+        display: block;
+        margin-bottom: 9px;
+        font-size: 10px;
+        color: #777;
+        text-transform: uppercase;
+    }
+
+    .form-field input,
+    .form-field textarea,
+    .form-field select {
+        width: 100%;
+        border: 1px solid #ccc;
+        background: #fff;
+        color: #111;
+        font-family: inherit;
+        font-size: 14px;
+        padding: 12px;
+        outline: none;
+        border-radius: 0;
+    }
+
+    .form-field input {
+        height: 45px;
+    }
+
+    .form-field textarea {
+        min-height: 250px;
+        resize: vertical;
+        line-height: 1.6;
+    }
+
+    .form-field input:focus,
+    .form-field textarea:focus,
+    .form-field select:focus {
+        border-color: #000;
+    }
+
+    .help-text {
+        display: block;
+        margin-top: 7px;
+        font-size: 10px;
+        color: #888;
+    }
+
+    .error-list {
+        margin: 7px 0 0;
+        padding: 0;
+        list-style: none;
+        color: #d00000;
+        font-size: 11px;
+    }
+
+    .form-submit {
+        margin-top: 30px;
+        display: flex;
+        gap: 8px;
+    }
+
+    .submit-button,
+    .cancel-button {
+        min-height: 46px;
+        padding: 0 24px;
+        border: 1px solid #111;
+        font-size: 11px;
+        text-transform: uppercase;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    .submit-button {
+        background: #000;
+        color: #fff;
+    }
+
+    .cancel-button {
+        background: #fff;
+        color: #111;
+        border-color: #ccc;
+    }
+
+    .current-task {
+        padding: 15px 0;
+        border-top: 1px solid #ddd;
+        border-bottom: 1px solid #ddd;
+        margin-bottom: 20px;
+    }
+
+    .current-task-label {
+        font-size: 10px;
+        color: #777;
+        text-transform: uppercase;
+        margin-bottom: 7px;
+    }
+
+    .current-task-title {
+        font-size: 16px;
+        text-transform: uppercase;
+    }
+
+    .sidebar-title {
+        margin: 0;
+        padding: 18px 0 12px;
+        font-size: 15px;
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+
+    .tip {
+        padding: 14px 0;
+        border-bottom: 1px solid #ddd;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .tip strong {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 11px;
+        text-transform: uppercase;
+    }
+
+    @media (max-width: 800px) {
+        .task-form {
+            grid-template-columns: 1fr;
+        }
+
+        .form-top {
+            align-items: flex-start;
+            gap: 20px;
+            flex-direction: column;
+        }
+    }
+</style>
+
+<div class="form-page">
+
+    <div class="form-top">
+
+        <div>
+
+            <div class="form-number">
+                BAZHANE / EDIT / №{{ object.id }}
+            </div>
+
+            <h1 class="form-title">
+                Редагування
+            </h1>
+
+        </div>
+
+        <a
+            href="{% url 'tasks:task-detail' object.pk %}"
+            class="back-link"
+        >
+            ← До задачі
+        </a>
+
+    </div>
+
+    <div class="current-task">
+
+        <div class="current-task-label">
+            Редагується задача
+        </div>
+
+        <div class="current-task-title">
+            {{ object.title }}
+        </div>
+
+    </div>
+
+    <form
+        method="post"
+        class="task-form"
+    >
+
+        {% csrf_token %}
+
+        <div class="form-main">
+
+            <div class="form-field">
+
+                <label>
+                    Назва задачі
+                </label>
+
+                {{ form.title }}
+
+                {% if form.title.errors %}
+
+                    <ul class="error-list">
+
+                        {% for error in form.title.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+
+                    </ul>
+
+                {% endif %}
+
+            </div>
+
+            <div class="form-field">
+
+                <label>
+                    Опис
+                </label>
+
+                {{ form.description }}
+
+                {% if form.description.errors %}
+
+                    <ul class="error-list">
+
+                        {% for error in form.description.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+
+                    </ul>
+
+                {% endif %}
+
+            </div>
+
+            <div class="form-submit">
+
+                <button
+                    type="submit"
+                    class="submit-button"
+                >
+                    Зберегти зміни
+                </button>
+
+                <a
+                    href="{% url 'tasks:task-detail' object.pk %}"
+                    class="cancel-button"
+                >
+                    Скасувати
+                </a>
+
+            </div>
+
+        </div>
+
+        <aside class="form-sidebar">
+
+            <div class="form-field">
+
+                <label>
+                    Статус
+                </label>
+
+                {{ form.status }}
+
+            </div>
+
+            <div class="form-field">
+
+                <label>
+                    Пріоритет
+                </label>
+
+                {{ form.priority }}
+
+            </div>
+
+            <div class="form-field">
+
+                <label>
+                    Дедлайн
+                </label>
+
+                {{ form.due_date }}
+
+            </div>
+
+            <div>
+
+                <h2 class="sidebar-title">
+                    Що можна змінити
+                </h2>
+
+                <div class="tip">
+                    <strong>Статус</strong>
+                    Зміни стан задачі.
+                </div>
+
+                <div class="tip">
+                    <strong>Пріоритет</strong>
+                    Зміни важливість задачі.
+                </div>
+
+                <div class="tip">
+                    <strong>Дедлайн</strong>
+                    Онови дату завершення.
+                </div>
+
+            </div>
+
+        </aside>
+
+    </form>
+
+</div>
+
+{% endblock %}

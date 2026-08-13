@@ -1,0 +1,674 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Мої задачі — BAZHANE
+{% endblock %}
+
+{% block content %}
+
+<style>
+    .tasks-page {
+        width: 100%;
+        padding: 0 14px 40px;
+    }
+
+    .tasks-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 18px 0 20px;
+        border-bottom: 1px solid #dddddd;
+    }
+
+    .tasks-title {
+        font-size: 26px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin: 0;
+    }
+
+    .create-task {
+        display: inline-block;
+        padding: 10px 18px;
+        background: #000000;
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 13px;
+        text-transform: uppercase;
+    }
+
+    .create-task:hover {
+        background: #333333;
+        color: #ffffff;
+    }
+
+    .filters {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 18px 0;
+        flex-wrap: wrap;
+    }
+
+    .filter-form {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .search-wrapper {
+        flex: 1;
+        min-width: 220px;
+    }
+
+    .search-wrapper input {
+        width: 100%;
+        height: 40px;
+        border: 1px solid #cccccc;
+        padding: 0 12px;
+        font-size: 13px;
+        outline: none;
+    }
+
+    .search-wrapper input:focus {
+        border-color: #000000;
+    }
+
+    .filter-form select {
+        height: 40px;
+        min-width: 150px;
+        border: 1px solid #cccccc;
+        background: #ffffff;
+        padding: 0 10px;
+        font-size: 13px;
+        color: #111111;
+        outline: none;
+    }
+
+    .filter-button {
+        height: 40px;
+        border: 1px solid #000000;
+        background: #000000;
+        color: #ffffff;
+        padding: 0 20px;
+        cursor: pointer;
+        font-size: 13px;
+        text-transform: uppercase;
+    }
+
+    .reset-button {
+        height: 40px;
+        display: flex;
+        align-items: center;
+        padding: 0 15px;
+        border: 1px solid #cccccc;
+        color: #111111;
+        text-decoration: none;
+        font-size: 13px;
+    }
+
+    .categories {
+        display: flex;
+        gap: 4px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+
+    .category {
+        padding: 9px 13px;
+        border: 1px solid #cccccc;
+        color: #111111;
+        text-decoration: none;
+        font-size: 12px;
+    }
+
+    .category:hover {
+        border-color: #000000;
+    }
+
+    .category.active {
+        background: #000000;
+        border-color: #000000;
+        color: #ffffff;
+    }
+
+    .tasks-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+    }
+
+    .task-card {
+        position: relative;
+        min-height: 310px;
+        border: 1px solid #eeeeee;
+        background: #f7f7f7;
+        display: flex;
+        flex-direction: column;
+        transition: 0.2s;
+    }
+
+    .task-card:hover {
+        border-color: #bbbbbb;
+    }
+
+    .task-card-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 13px 13px 0;
+    }
+
+    .task-number {
+        font-size: 11px;
+        color: #777777;
+    }
+
+    .favorite-form {
+        margin: 0;
+        padding: 0;
+    }
+
+    .task-star {
+        border: none;
+        background: transparent;
+        padding: 0;
+        font-size: 20px;
+        line-height: 1;
+        color: #888888;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .task-star:hover {
+        color: #000000;
+        transform: scale(1.15);
+    }
+
+    .task-star.favorite-active {
+        color: #000000;
+    }
+
+    .task-content {
+        padding: 25px 16px 10px;
+        flex: 1;
+    }
+
+    .task-title {
+        margin: 0 0 12px;
+        font-size: 19px;
+        line-height: 1.2;
+        font-weight: 500;
+        text-transform: uppercase;
+    }
+
+    .task-description {
+        margin: 0;
+        color: #666666;
+        font-size: 13px;
+        line-height: 1.5;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .task-info {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding: 0 16px 15px;
+        font-size: 12px;
+    }
+
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        border-top: 1px solid #dddddd;
+        padding-top: 7px;
+    }
+
+    .info-label {
+        color: #777777;
+    }
+
+    .info-value {
+        color: #111111;
+        font-weight: 500;
+    }
+
+    .status {
+        display: inline-block;
+        padding: 3px 7px;
+        font-size: 10px;
+        text-transform: uppercase;
+    }
+
+    .status-todo {
+        background: #e9e9e9;
+    }
+
+    .status-progress {
+        background: #dfeaf5;
+    }
+
+    .status-finish {
+        background: #dcebdd;
+    }
+
+    .priority-high {
+        color: #e00000;
+    }
+
+    .priority-average {
+        color: #111111;
+    }
+
+    .priority-low {
+        color: #777777;
+    }
+
+    .task-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        border-top: 1px solid #dddddd;
+    }
+
+    .task-actions a,
+    .complete-form button {
+        min-height: 42px;
+        padding: 9px 5px;
+        text-align: center;
+        text-decoration: none;
+        color: #111111;
+        font-size: 11px;
+        text-transform: uppercase;
+        border: none;
+        border-right: 1px solid #dddddd;
+        background: transparent;
+        cursor: pointer;
+        font-family: inherit;
+    }
+
+    .task-actions a:hover,
+    .complete-form button:hover {
+        background: #000000;
+        color: #ffffff;
+    }
+
+    .complete-form {
+        margin: 0;
+        padding: 0;
+    }
+
+    .complete-form button {
+        width: 100%;
+        border-right: none;
+    }
+
+    .completed-button {
+        min-height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #dcebdd;
+        color: #3d6243;
+        font-size: 11px;
+        text-transform: uppercase;
+    }
+
+    .empty-tasks {
+        grid-column: 1 / -1;
+        min-height: 300px;
+        border: 1px solid #eeeeee;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .empty-tasks h2 {
+        font-size: 20px;
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+
+    .empty-tasks p {
+        color: #777777;
+        font-size: 13px;
+    }
+
+    @media (max-width: 1200px) {
+        .tasks-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @media (max-width: 850px) {
+        .tasks-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 600px) {
+        .tasks-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .filter-form {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .search-wrapper {
+            width: 100%;
+        }
+
+        .filter-form select,
+        .filter-button,
+        .reset-button {
+            width: 100%;
+        }
+    }
+</style>
+
+
+<div class="tasks-page">
+
+    <div class="tasks-header">
+
+        <h1 class="tasks-title">
+            Мої задачі
+        </h1>
+
+        <a
+            href="{% url 'tasks:task-create' %}"
+            class="create-task"
+        >
+            + Нова задача
+        </a>
+
+    </div>
+
+
+    <div class="filters">
+
+        <form
+            method="get"
+            class="filter-form"
+        >
+
+            <div class="search-wrapper">
+                {{ form.search }}
+            </div>
+
+            {{ form.status }}
+
+            {{ form.priority }}
+
+            <button
+                type="submit"
+                class="filter-button"
+            >
+                Пошук
+            </button>
+
+            <a
+                href="{% url 'tasks:task-list' %}"
+                class="reset-button"
+            >
+                Скинути
+            </a>
+
+        </form>
+
+    </div>
+
+
+    <div class="categories">
+
+        <a
+            href="{% url 'tasks:task-list' %}"
+            class="category {% if not request.GET.status and not request.GET.priority and not request.GET.favorite %}active{% endif %}"
+        >
+            Всі
+        </a>
+
+        <a
+            href="?status=todo"
+            class="category {% if request.GET.status == 'todo' %}active{% endif %}"
+        >
+            Виконати
+        </a>
+
+        <a
+            href="?status=in_progress"
+            class="category {% if request.GET.status == 'in_progress' %}active{% endif %}"
+        >
+            В процесі
+        </a>
+
+        <a
+            href="?status=finish"
+            class="category {% if request.GET.status == 'finish' %}active{% endif %}"
+        >
+            Виконані
+        </a>
+
+        <a
+            href="?priority=high"
+            class="category {% if request.GET.priority == 'high' %}active{% endif %}"
+        >
+            Високий пріоритет
+        </a>
+
+        <a
+            href="?favorite=1"
+            class="category {% if request.GET.favorite == '1' %}active{% endif %}"
+        >
+            ★ Обране
+        </a>
+
+    </div>
+
+
+    <div class="tasks-grid">
+
+        {% for task in tasks %}
+
+            <article class="task-card">
+
+                <div class="task-card-top">
+
+                    <span class="task-number">
+                        TASK №{{ task.id }}
+                    </span>
+
+                    <form
+                        method="post"
+                        action="{% url 'tasks:task-favorite' task.pk %}"
+                        class="favorite-form"
+                    >
+
+                        {% csrf_token %}
+
+                        <button
+                            type="submit"
+                            class="task-star {% if task.is_favorite %}favorite-active{% endif %}"
+                            title="{% if task.is_favorite %}Видалити з обраного{% else %}Додати в обране{% endif %}"
+                        >
+
+                            {% if task.is_favorite %}
+                                ★
+                            {% else %}
+                                ☆
+                            {% endif %}
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+
+                <div class="task-content">
+
+                    <h2 class="task-title">
+                        {{ task.title }}
+                    </h2>
+
+                    <p class="task-description">
+                        {{ task.description }}
+                    </p>
+
+                </div>
+
+
+                <div class="task-info">
+
+                    <div class="info-row">
+
+                        <span class="info-label">
+                            Статус
+                        </span>
+
+                        <span class="info-value">
+
+                            {% if task.status == 'todo' %}
+
+                                <span class="status status-todo">
+                                    Виконати
+                                </span>
+
+                            {% elif task.status == 'in_progress' %}
+
+                                <span class="status status-progress">
+                                    В процесі
+                                </span>
+
+                            {% else %}
+
+                                <span class="status status-finish">
+                                    Виконана
+                                </span>
+
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-row">
+
+                        <span class="info-label">
+                            Пріоритет
+                        </span>
+
+                        <span
+                            class="info-value
+                            {% if task.priority == 'high' %}
+                                priority-high
+                            {% elif task.priority == 'average' %}
+                                priority-average
+                            {% else %}
+                                priority-low
+                            {% endif %}
+                            "
+                        >
+                            {{ task.get_priority_display }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-row">
+
+                        <span class="info-label">
+                            Дедлайн
+                        </span>
+
+                        <span class="info-value">
+
+                            {% if task.due_date %}
+                                {{ task.due_date|date:"d.m.Y" }}
+                            {% else %}
+                                —
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="task-actions">
+
+                    <a
+                        href="{% url 'tasks:task-detail' task.pk %}"
+                    >
+                        Переглянути
+                    </a>
+
+
+                    {% if task.status != 'finish' %}
+
+                        <form
+                            method="post"
+                            action="{% url 'tasks:task-complete' task.pk %}"
+                            class="complete-form"
+                        >
+
+                            {% csrf_token %}
+
+                            <button type="submit">
+                                ✓ Завершити
+                            </button>
+
+                        </form>
+
+                    {% else %}
+
+                        <div class="completed-button">
+                            ✓ Виконано
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </article>
+
+        {% empty %}
+
+            <div class="empty-tasks">
+
+                <h2>
+                    Задач поки немає
+                </h2>
+
+                <p>
+                    Створи свою першу задачу.
+                </p>
+
+                <a
+                    href="{% url 'tasks:task-create' %}"
+                    class="create-task"
+                >
+                    Створити задачу
+                </a>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}
