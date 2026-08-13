@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Merry Berry Cafe</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+
+        :root{
+            --purple:#92369D;
+            --purple-dark:#7b2d86;
+            --brown:#4B2E2E;
+            --cream:#FCF9FC;
+            --white:#ffffff;
+        }
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+            font-family:'Poppins',sans-serif;
+            background:var(--cream);
+            color:var(--brown);
+        }
+
+        /* ================ NAVBAR ================ */
+
+        .navbar{
+            background:var(--purple);
+            padding:15px 45px;
+            box-shadow:0 8px 20px rgba(146,54,157,.25);
+        }
+
+        .navbar-brand{
+            display:flex;
+            align-items:center;
+            color:white !important;
+            font-size:26px;
+            font-weight:700;
+        }
+
+        .nav-link-custom{
+            color:white;
+            font-weight:500;
+            margin-left:25px;
+            transition:.3s;
+            text-decoration:none;
+        }
+
+        .nav-link-custom:hover{
+            color:#FFE8FF;
+            text-decoration:none;
+        }
+
+        /* ================= BUTTON ================= */
+
+        .logout-btn{
+            background:var(--brown);
+            color:white;
+            border:none;
+            padding:10px 24px;
+            border-radius:40px;
+            font-weight:600;
+            transition:.3s;
+        }
+
+        .logout-btn:hover{
+            background:#2f1d1d;
+            transform:translateY(-2px);
+        }
+
+        /* ================= CONTENT ================= */
+
+        .container-main{
+            margin:45px auto;
+            background:white;
+            border-radius:25px;
+            padding:45px;
+            box-shadow:0 10px 35px rgba(0,0,0,.08);
+        }
+
+        h1,h2,h3,h4{
+            color:var(--purple);
+            font-weight:700;
+        }
+
+        /* ================= CARDS ================= */
+
+        .card{
+            border:none;
+            border-radius:20px;
+            box-shadow:0 6px 20px rgba(0,0,0,.08);
+            transition:.3s;
+        }
+
+        .card:hover{
+            transform:translateY(-5px);
+        }
+
+
+        /* ================== BUTTONS ================== */
+
+        .btn-primary{
+            background:var(--purple);
+            border:none;
+            border-radius:30px;
+            padding:10px 24px;
+        }
+
+        .btn-primary:hover{
+            background:var(--purple-dark);
+        }
+
+        /* ================== FOOTER ================== */
+
+        footer{
+            margin-top:60px;
+            padding:25px;
+            text-align:center;
+            color:white;
+            background:var(--purple);
+            font-size:15px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg">
+
+    <a class="navbar-brand" href="{% url 'tasks:task-list' %}">
+        Merry Berry
+    </a>
+
+    <div class="ml-auto d-flex align-items-center">
+
+        <a href="{% url 'tasks:task-list' %}" class="nav-link-custom">
+            🏠 Головна
+        </a>
+
+        <a href="{% url 'tasks:register' %}" class="nav-link-custom">
+            👤 Реєстрація
+        </a>
+
+        <form action="{% url 'tasks:logout' %}" method="post" class="ml-4 mb-0">
+            {% csrf_token %}
+            <button class="logout-btn">
+                Вийти
+            </button>
+        </form>
+
+    </div>
+
+</nav>
+
+<div class="container container-main">
+
+    {% block content %}
+    {% endblock %}
+
+</div>
+
+<footer>
+    🍰 Merry Berry Cafe • Смак & Аромат
+</footer>
+
+</body>
+</html>
+
