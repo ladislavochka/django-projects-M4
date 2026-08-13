@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-3">
+    <h2>{{ task.title }}</h2>
+    <p>{{ task.description }}</p>
+    <p>
+        Status(Статус):
+        <span class="badge badge-primary">{{ task.status }}</span>
+    </p>
+    <p>
+        Priority(Пріоритет):
+        <span class="badge badge-secondary">{{ task.priority }}</span>
+    </p>
+    <a href="{% url 'tasks:task-update' task.id %}" class="btn btn-warning">
+        Edit(Редагувати)
+    </a>
+    <a href="{% url 'tasks:task-delete' task.id %}" class="btn btn-danger">
+        Delete(Видалити)
+    </a>
+    <hr>
+    <h3>Comments(Коментарі)</h3>
+    {% for comment in task.comments.all %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <p>{{ comment.text }}</p>
+                {% if comment.media %}
+                    <p>
+                        <a href="{{ comment.media.url }}" target="_blank">
+                            View attachment(Переглянути вкладений файл)
+                        </a>
+                    </p>
+                {% endif %}
+                <small class="text-muted">
+                    Author(Автор): {{ comment.author.username }}
+                </small>
+                <br><br>
+                <form action="{% url 'tasks:comment-like-toggle' comment.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-success btn-sm">
+                        👍 Like(Лайк) ({{ comment.likes.count }})
+                    </button>
+                </form>
+            </div>
+        </div>
+    {% empty %}
+        <p>No comments yet.(Комментарів поки немає.)</p>
+    {% endfor %}
+    <hr>
+    <h4>Add comment(Додати коментар)</h4>
+    <form action="{% url 'tasks:task-detail' task.id %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+
+        <button type="submit" class="btn btn-primary">
+            Send(Відправити)
+        </button>
+    </form>
+
+</div>
+{% endblock %}
