@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comfy — магазин техніки</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F3F5F9;
+    --surface:#FFFFFF;
+    --ink:#10151F;
+    --ink-soft:#5B6472;
+    --brand:#0E8A5C;
+    --brand-deep:#0A6B47;
+    --brand-bright:#22B573;
+    --orange:#FF7A1A;
+    --orange-deep:#E86400;
+    --success:#17A672;
+    --line:#DFE4EC;
+    --radius:14px;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  h1,h2,h3,.logo{
+    font-family:'Space Grotesk',sans-serif;
+  }
+
+  .mono{
+    font-family:'Roboto Mono',monospace;
+  }
+
+  a{color:inherit;text-decoration:none;}
+  ul{list-style:none;}
+  img{max-width:100%;display:block;}
+
+  .wrap{
+    max-width:1180px;
+    margin:0 auto;
+    padding:0 24px;
+  }
+  .topbar{
+    background:var(--brand-deep);
+    color:#CFEADD;
+    font-size:13px;
+  }
+  .topbar .wrap{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    height:36px;
+  }
+  .topbar-links{display:flex;gap:18px;}
+  .topbar-links span{opacity:.85;}
+  header.site{
+    background:var(--surface);
+    border-bottom:1px solid var(--line);
+    position:sticky;
+    top:0;
+    z-index:50;
+  }
+  header.site .wrap{
+    display:flex;
+    align-items:center;
+    gap:32px;
+    height:78px;
+  }
+  .logo{
+    font-size:22px;
+    font-weight:700;
+    color:var(--brand);
+    white-space:nowrap;
+    letter-spacing:.2px;
+  }
+  .logo span{color:var(--orange);}
+
+  nav.main{
+    display:flex;
+    gap:26px;
+    flex:1;
+  }
+  nav.main a{
+    font-size:14.5px;
+    font-weight:500;
+    color:var(--ink);
+    padding:6px 0;
+    border-bottom:2px solid transparent;
+    transition:border-color .15s, color .15s;
+  }
+  nav.main a:hover{
+    color:var(--brand-bright);
+    border-color:var(--brand-bright);
+  }
+
+  .search{
+    display:flex;
+    align-items:center;
+    background:var(--bg);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:0 14px;
+    height:42px;
+    width:280px;
+  }
+  .search input{
+    border:none;
+    background:transparent;
+    outline:none;
+    font-size:14px;
+    width:100%;
+    font-family:inherit;
+  }
+  .search svg{flex-shrink:0;opacity:.55;}
+
+  .header-actions{
+    display:flex;
+    align-items:center;
+    gap:18px;
+  }
+  .icon-btn{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:2px;
+    font-size:11px;
+    color:var(--ink-soft);
+    font-weight:500;
+    position:relative;
+  }
+  .icon-btn .badge{
+    position:absolute;
+    top:-4px;
+    right:-8px;
+    background:var(--orange);
+    color:#fff;
+    font-size:10px;
+    font-weight:700;
+    width:16px;height:16px;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .hero{
+    background:linear-gradient(120deg,var(--brand-deep) 0%,var(--brand) 45%,var(--orange) 115%);
+    color:#fff;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero .wrap{
+    display:grid;
+    grid-template-columns:1.1fr .9fr;
+    gap:40px;
+    padding-top:64px;
+    padding-bottom:56px;
+    align-items:center;
+    position:relative;
+    z-index:2;
+  }
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:rgba(255,255,255,.1);
+    border:1px solid rgba(255,255,255,.18);
+    padding:6px 14px;
+    border-radius:999px;
+    font-size:12.5px;
+    font-weight:600;
+    letter-spacing:.5px;
+    text-transform:uppercase;
+    color:#BFF0D6;
+    margin-bottom:22px;
+  }
+  .eyebrow .dot{
+    width:7px;height:7px;border-radius:50%;
+    background:var(--orange);
+  }
+  .hero h1{
+    font-size:44px;
+    font-weight:700;
+    line-height:1.12;
+    letter-spacing:-.5px;
+    margin-bottom:18px;
+  }
+  .hero h1 em{
+    font-style:normal;
+    color:var(--orange);
+  }
+  .hero p.lead{
+    font-size:16.5px;
+    color:#D7EEE1;
+    max-width:460px;
+    margin-bottom:30px;
+  }
+  .hero-ctas{
+    display:flex;
+    gap:14px;
+    margin-bottom:36px;
+  }
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    padding:14px 26px;
+    border-radius:10px;
+    font-size:14.5px;
+    font-weight:600;
+    cursor:pointer;
+    border:none;
+    transition:transform .12s ease, box-shadow .12s ease, background .12s ease;
+    font-family:inherit;
+  }
+  .btn-primary{
+    background:var(--orange);
+    color:#fff;
+    box-shadow:0 10px 24px -8px rgba(255,106,0,.55);
+  }
+  .btn-primary:hover{background:var(--orange-deep);transform:translateY(-1px);}
+  .btn-ghost{
+    background:transparent;
+    color:#fff;
+    border:1px solid rgba(255,255,255,.35);
+  }
+  .btn-ghost:hover{background:rgba(255,255,255,.08);}
+
+  .hero-stats{
+    display:flex;
+    gap:34px;
+  }
+  .hero-stats div{
+    border-left:2px solid rgba(255,255,255,.2);
+    padding-left:14px;
+  }
+  .hero-stats b{
+    display:block;
+    font-family:'Space Grotesk',sans-serif;
+    font-size:22px;
+  }
+  .hero-stats span{
+    font-size:12.5px;
+    color:#CBE7D8;
+  }
+  .device-panel{
+    position:relative;
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.16);
+    border-radius:18px;
+    padding:26px;
+    backdrop-filter:blur(2px);
+  }
+  .device-panel .panel-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:18px;
+    font-size:12px;
+    color:#BFF0D6;
+    letter-spacing:.4px;
+  }
+  .device-shape{
+    height:150px;
+    border-radius:12px;
+    background:
+      linear-gradient(160deg, rgba(10,30,20,.15), rgba(6,20,14,.55)),
+      url('https://commons.wikimedia.org/wiki/Special:FilePath/Laptop.jpg?width=500') center/cover no-repeat;
+    border:1px solid rgba(255,255,255,.14);
+    margin-bottom:18px;
+    position:relative;
+    overflow:hidden;
+  }
+  .device-shape::before{
+    content:"";
+    position:absolute;
+    left:18px;right:18px;top:18px;bottom:18px;
+    border:1px dashed rgba(255,255,255,.25);
+    border-radius:8px;
+  }
+  .device-shape::after{
+    content:"⚡ 65W  ·  120Hz  ·  Wi-Fi 6E  ·  USB-C";
+    position:absolute;
+    bottom:14px;left:0;right:0;
+    text-align:center;
+    font-family:'Roboto Mono',monospace;
+    font-size:11px;
+    color:rgba(255,255,255,.55);
+    letter-spacing:.5px;
+  }
+  .specline{
+    display:flex;
+    align-items:baseline;
+    gap:6px;
+    font-size:13px;
+    color:#D9F0E3;
+    margin-bottom:9px;
+  }
+  .specline .lbl{color:#9FD6BB;white-space:nowrap;}
+  .specline .fill{
+    flex:1;
+    border-bottom:1px dotted rgba(255,255,255,.3);
+    transform:translateY(-4px);
+  }
+  .specline .val{
+    font-family:'Roboto Mono',monospace;
+    font-weight:500;
+    color:#fff;
+    white-space:nowrap;
+  }
+  section{
+    padding:64px 0;
+  }
+  .section-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    margin-bottom:34px;
+    gap:20px;
+  }
+  .section-head .tag{
+    font-size:12.5px;
+    font-weight:700;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    color:var(--orange);
+    margin-bottom:8px;
+    display:block;
+  }
+  .section-head h2{
+    font-size:30px;
+    font-weight:700;
+    letter-spacing:-.4px;
+  }
+  .section-head p{
+    color:var(--ink-soft);
+    font-size:14.5px;
+    max-width:420px;
+  }
+  .about{
+    background:var(--surface);
+  }
+  .about-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:48px;
+    align-items:start;
+  }
+  .about-text p{
+    color:var(--ink-soft);
+    font-size:15px;
+    margin-bottom:16px;
+  }
+  .about-text p:first-of-type{
+    font-size:17px;
+    color:var(--ink);
+    font-weight:500;
+  }
+
+  .feature-list{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+  }
+  .feature{
+    background:var(--bg);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:20px;
+  }
+  .feature .num{
+    font-family:'Roboto Mono',monospace;
+    font-size:12px;
+    color:var(--brand-bright);
+    font-weight:600;
+    margin-bottom:10px;
+    display:block;
+  }
+  .feature h3{
+    font-size:15.5px;
+    margin-bottom:6px;
+  }
+  .feature p{
+    font-size:13.5px;
+    color:var(--ink-soft);
+  }
+  .products{
+    background:var(--bg);
+  }
+  .filter-row{
+    display:flex;
+    gap:10px;
+    margin-bottom:30px;
+    flex-wrap:wrap;
+  }
+  .chip{
+    padding:8px 16px;
+    border-radius:999px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    font-size:13px;
+    font-weight:500;
+    color:var(--ink-soft);
+    cursor:default;
+  }
+  .chip.active{
+    background:var(--brand);
+    border-color:var(--brand);
+    color:#fff;
+  }
+
+  .product-grid{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:20px;
+  }
+
+  .card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:18px;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+    transition:box-shadow .15s ease, transform .15s ease;
+  }
+  .card:hover{
+    box-shadow:0 16px 32px -18px rgba(11,61,145,.25);
+    transform:translateY(-3px);
+  }
+  .card .badge-row{
+    position:absolute;
+    top:14px;left:14px;right:14px;
+    display:flex;
+    justify-content:space-between;
+    z-index:2;
+  }
+  .badge-sale{
+    background:var(--orange);
+    color:#fff;
+    font-size:11.5px;
+    font-weight:700;
+    padding:4px 9px;
+    border-radius:6px;
+  }
+  .badge-new{
+    background:var(--success);
+    color:#fff;
+    font-size:11.5px;
+    font-weight:700;
+    padding:4px 9px;
+    border-radius:6px;
+  }
+  .badge-stock{
+    background:rgba(23,166,114,.1);
+    color:var(--success);
+    font-size:11px;
+    font-weight:600;
+    padding:3px 8px;
+    border-radius:6px;
+  }
+
+  .card-visual{
+    height:150px;
+    border-radius:10px;
+    margin-bottom:16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    overflow:hidden;
+    padding:10px;
+  }
+  .card-visual img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    mix-blend-mode:multiply;
+  }
+  .v-laptop{background:linear-gradient(150deg,#E4F6EC,#C9EBD9);}
+  .v-phone{background:linear-gradient(150deg,#FFEBD9,#FFD3AC);}
+  .v-tv{background:linear-gradient(150deg,#E2F5EA,#BFEAD3);}
+  .v-audio{background:linear-gradient(150deg,#FFEEDD,#FFD9B3);}
+
+  .card-cat{
+    font-size:11.5px;
+    text-transform:uppercase;
+    letter-spacing:.6px;
+    color:var(--ink-soft);
+    font-weight:600;
+    margin-bottom:6px;
+  }
+  .card h3{
+    font-size:15.5px;
+    font-weight:600;
+    margin-bottom:12px;
+    line-height:1.3;
+    min-height:40px;
+  }
+
+  .spec-sheet{
+    border-top:1px dashed var(--line);
+    border-bottom:1px dashed var(--line);
+    padding:10px 0;
+    margin-bottom:14px;
+  }
+  .spec-sheet .specline{
+    color:var(--ink-soft);
+    margin-bottom:6px;
+  }
+  .spec-sheet .specline .lbl{color:var(--ink-soft);font-size:12px;}
+  .spec-sheet .specline .fill{border-bottom-color:var(--line);}
+  .spec-sheet .specline .val{color:var(--ink);font-size:12px;}
+
+  .price-row{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    margin-bottom:14px;
+  }
+  .price-now{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:21px;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .price-old{
+    font-size:13.5px;
+    color:#9AA3B2;
+    text-decoration:line-through;
+  }
+
+  .card-footer{
+    margin-top:auto;
+    display:flex;
+    gap:8px;
+  }
+  .btn-cart{
+    flex:1;
+    background:var(--brand);
+    color:#fff;
+    border:none;
+    padding:11px;
+    border-radius:9px;
+    font-weight:600;
+    font-size:13.5px;
+    cursor:pointer;
+    font-family:inherit;
+    transition:background .15s;
+  }
+  .btn-cart:hover{background:var(--brand-deep);}
+  .btn-fav{
+    width:42px;
+    border:1px solid var(--line);
+    border-radius:9px;
+    background:var(--surface);
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+    flex-shrink:0;
+  }
+
+  .more-row{
+    text-align:center;
+    margin-top:34px;
+  }
+  .btn-outline{
+    background:transparent;
+    border:1.5px solid var(--brand);
+    color:var(--brand);
+    padding:13px 30px;
+    border-radius:10px;
+    font-weight:600;
+    font-size:14px;
+    cursor:pointer;
+    font-family:inherit;
+    transition:background .15s, color .15s;
+  }
+  .btn-outline:hover{background:var(--brand);color:#fff;}
+  .promo{
+    background:var(--surface);
+  }
+  .promo-inner{
+    background:linear-gradient(100deg,var(--brand-deep),var(--orange));
+    border-radius:20px;
+    padding:40px 44px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    color:#fff;
+    gap:24px;
+    flex-wrap:wrap;
+  }
+  .promo-inner h3{
+    font-size:24px;
+    margin-bottom:8px;
+  }
+  .promo-inner p{
+    color:#D7EEE1;
+    font-size:14.5px;
+    max-width:460px;
+  }
+  footer{
+    background:#0A2119;
+    color:#8FA89C;
+    padding:52px 0 26px;
+  }
+  .footer-grid{
+    display:grid;
+    grid-template-columns:1.4fr 1fr 1fr 1.2fr;
+    gap:36px;
+    margin-bottom:40px;
+  }
+  .footer-grid h4{
+    color:#fff;
+    font-size:14px;
+    margin-bottom:16px;
+    font-weight:600;
+  }
+  .footer-grid ul li{margin-bottom:10px;font-size:13.5px;}
+  .footer-grid ul li a:hover{color:#fff;}
+  .footer-logo{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:20px;
+    font-weight:700;
+    color:#fff;
+    margin-bottom:12px;
+  }
+  .footer-logo span{color:var(--orange);}
+  .footer-grid p{font-size:13.5px;line-height:1.7;}
+
+  .footer-bottom{
+    border-top:1px solid rgba(255,255,255,.08);
+    padding-top:22px;
+    display:flex;
+    justify-content:space-between;
+    font-size:12.5px;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  @media (max-width:980px){
+    nav.main, .search{display:none;}
+    .hero .wrap{grid-template-columns:1fr;}
+    .about-grid{grid-template-columns:1fr;}
+    .product-grid{grid-template-columns:repeat(2,1fr);}
+    .footer-grid{grid-template-columns:1fr 1fr;}
+  }
+  @media (max-width:560px){
+    .product-grid{grid-template-columns:1fr;}
+    .hero h1{font-size:32px;}
+    .hero-stats{flex-wrap:wrap;row-gap:14px;}
+    .footer-grid{grid-template-columns:1fr;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;}
+  }
+
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <div class="topbar-links">
+      <span>Доставка по всій Україні</span>
+      <span>Гарантія від 12 до 36 місяців</span>
+    </div>
+    <div class="topbar-links">
+      <span>0 148 867 333</span>
+      <span>Магазини та сервіс-центри</span>
+    </div>
+  </div>
+</div>
+
+<header class="site">
+  <div class="wrap">
+    <div class="logo">com<span>fy</span></div>
+    <nav class="main">
+      <a href="#hero">Головна</a>
+      <a href="#about">Про нас</a>
+      <a href="#products">Каталог</a>
+      <a href="#promo">Акції</a>
+      <a href="#footer">Контакти</a>
+    </nav>
+    <div class="search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" placeholder="Пошук техніки, брендів, моделей…">
+    </div>
+    <div class="header-actions">
+      <div class="icon-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1A1F2B" stroke-width="1.8"><path d="M20.8 8.6c0-2.5-2-4.4-4.4-4.4-1.6 0-3 .9-3.8 2.1-.8-1.3-2.2-2.1-3.8-2.1-2.5 0-4.4 2-4.4 4.4 0 4.6 8.2 9.8 8.2 9.8s8.2-5.2 8.2-9.8Z"/></svg>
+        Обране
+      </div>
+      <div class="icon-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1A1F2B" stroke-width="1.8"><circle cx="9" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2 3h2l2.6 12.4a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.6L21 7H6"/></svg>
+        <span class="badge">3</span>
+        Кошик
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="hero" id="hero">
+  <div class="wrap">
+    <div class="hero-copy">
+      <div class="eyebrow"><span class="dot"></span> Новинки серпня вже в наявності</div>
+      <h1>Техніка, яку <em>обирають</em>,<br>а не просто купують</h1>
+      <p class="lead">Ноутбуки, смартфони, телевізори та аудіо від перевірених брендів — з офіційною гарантією, тест-драйвом у магазині та доставкою вже завтра.</p>
+      <div class="hero-ctas">
+        <button class="btn btn-primary">Перейти до каталогу</button>
+        <button class="btn btn-ghost">Акційні пропозиції</button>
+      </div>
+      <div class="hero-stats">
+        <div><b>28 000+</b><span>товарів у каталозі</span></div>
+        <div><b>150</b><span>магазинів по Україні</span></div>
+        <div><b>4.8 / 5</b><span>оцінка покупців</span></div>
+      </div>
+    </div>
+
+    <div class="device-panel">
+      <div class="panel-head">
+        <span>ХІТ ПРОДАЖІВ · СЕРПЕНЬ</span>
+        <span class="mono">SKU-58214</span>
+      </div>
+      <div class="device-shape"></div>
+      <div class="specline"><span class="lbl">Дисплей</span><span class="fill"></span><span class="val">14.5" 3K OLED</span></div>
+      <div class="specline"><span class="lbl">Процесор</span><span class="fill"></span><span class="val">8-ядерний, 4.2 ГГц</span></div>
+      <div class="specline"><span class="lbl">Батарея</span><span class="fill"></span><span class="val">до 18 год</span></div>
+      <div class="specline"><span class="lbl">Вага</span><span class="fill"></span><span class="val">1.3 кг</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="about" id="about">
+  <div class="wrap">
+    <div class="about-grid">
+      <div class="about-text">
+        <p>Комфі — це магазин техніки, який працює за принципом «спочатку розібратись, потім продати».</p>
+        <p>Ми відбираємо ноутбуки, смартфони, телевізори та побутову електроніку так, щоб кожна позиція в каталозі мала зрозумілі характеристики, чесну ціну та реальний строк служби — без маркетингових перебільшень.</p>
+        <p>Замовлення можна оформити онлайн з доставкою кур'єром чи у відділення, або забрати самостійно в одному з магазинів — з можливістю подивитись і протестувати пристрій наживо.</p>
+      </div>
+      <div class="feature-list">
+        <div class="feature">
+          <span class="num">01</span>
+          <h3>Офіційна гарантія</h3>
+          <p>Від 12 до 36 місяців та власні сервісні центри у великих містах.</p>
+        </div>
+        <div class="feature">
+          <span class="num">02</span>
+          <h3>Доставка 24–48 год</h3>
+          <p>Кур'єром, у відділення перевізника або самовивіз з магазину.</p>
+        </div>
+        <div class="feature">
+          <span class="num">03</span>
+          <h3>Оплата частинами</h3>
+          <p>Розстрочка 0% від партнерських банків на строк до 24 місяців.</p>
+        </div>
+        <div class="feature">
+          <span class="num">04</span>
+          <h3>Обмін і повернення</h3>
+          <p>14 днів на повернення товару, якщо він просто не підійшов.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="products" id="products">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="tag">Каталог</span>
+        <h2>Популярні товари</h2>
+      </div>
+      <p>Добірка техніки, яку найчастіше обирають цього тижня — за співвідношенням ціни та характеристик.</p>
+    </div>
+
+    <div class="filter-row">
+      <div class="chip active">Все</div>
+      <div class="chip">Ноутбуки</div>
+      <div class="chip">Смартфони</div>
+      <div class="chip">Телевізори</div>
+      <div class="chip">Аудіо</div>
+    </div>
+
+    <div class="product-grid">
+
+      <div class="card">
+        <div class="badge-row">
+          <span class="badge-sale">−15%</span>
+          <span class="badge-stock">Є в наявності</span>
+        </div>
+        <div class="card-visual v-laptop"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Laptop.jpg?width=400" alt="Ноутбук NovaBook Air 14" loading="lazy"></div>
+        <span class="card-cat">Ноутбуки</span>
+        <h3>NovaBook Air 14, 16/512 ГБ, срібний</h3>
+        <div class="spec-sheet">
+          <div class="specline"><span class="lbl">Екран</span><span class="fill"></span><span class="val">14" IPS 120Гц</span></div>
+          <div class="specline"><span class="lbl">Пам'ять</span><span class="fill"></span><span class="val">16/512 ГБ</span></div>
+          <div class="specline"><span class="lbl">Батарея</span><span class="fill"></span><span class="val">до 16 год</span></div>
+        </div>
+        <div class="price-row">
+          <span class="price-now">27 999 ₴</span>
+          <span class="price-old">32 999 ₴</span>
+        </div>
+        <div class="card-footer">
+          <button class="btn-cart">До кошика</button>
+          <button class="btn-fav">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#5B6472" stroke-width="1.8"><path d="M20.8 8.6c0-2.5-2-4.4-4.4-4.4-1.6 0-3 .9-3.8 2.1-.8-1.3-2.2-2.1-3.8-2.1-2.5 0-4.4 2-4.4 4.4 0 4.6 8.2 9.8 8.2 9.8s8.2-5.2 8.2-9.8Z"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="badge-row">
+          <span class="badge-new">Новинка</span>
+          <span class="badge-stock">Є в наявності</span>
+        </div>
+        <div class="card-visual v-phone"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Smartphone.png?width=400" alt="Смартфон Orion X5 Pro" loading="lazy"></div>
+        <span class="card-cat">Смартфони</span>
+        <h3>Orion X5 Pro 256 ГБ, графітовий</h3>
+        <div class="spec-sheet">
+          <div class="specline"><span class="lbl">Екран</span><span class="fill"></span><span class="val">6.7" AMOLED 120Гц</span></div>
+          <div class="specline"><span class="lbl">Камера</span><span class="fill"></span><span class="val">50 + 12 + 12 Мп</span></div>
+          <div class="specline"><span class="lbl">Батарея</span><span class="fill"></span><span class="val">5000 мАг</span></div>
+        </div>
+        <div class="price-row">
+          <span class="price-now">24 499 ₴</span>
+        </div>
+        <div class="card-footer">
+          <button class="btn-cart">До кошика</button>
+          <button class="btn-fav">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#5B6472" stroke-width="1.8"><path d="M20.8 8.6c0-2.5-2-4.4-4.4-4.4-1.6 0-3 .9-3.8 2.1-.8-1.3-2.2-2.1-3.8-2.1-2.5 0-4.4 2-4.4 4.4 0 4.6 8.2 9.8 8.2 9.8s8.2-5.2 8.2-9.8Z"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="badge-row">
+          <span class="badge-sale">−10%</span>
+          <span class="badge-stock">Є в наявності</span>
+        </div>
+        <div class="card-visual v-tv"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/TV%20set.jpg?width=400" alt="Телевізор StreamView 55 дюймів" loading="lazy"></div>
+        <span class="card-cat">Телевізори</span>
+        <h3>StreamView 55" 4K QLED Smart TV</h3>
+        <div class="spec-sheet">
+          <div class="specline"><span class="lbl">Діагональ</span><span class="fill"></span><span class="val">55" (139 см)</span></div>
+          <div class="specline"><span class="lbl">Роздільність</span><span class="fill"></span><span class="val">3840×2160, 4K</span></div>
+          <div class="specline"><span class="lbl">Smart TV</span><span class="fill"></span><span class="val">Wi-Fi, застосунки</span></div>
+        </div>
+        <div class="price-row">
+          <span class="price-now">18 999 ₴</span>
+          <span class="price-old">21 199 ₴</span>
+        </div>
+        <div class="card-footer">
+          <button class="btn-cart">До кошика</button>
+          <button class="btn-fav">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#5B6472" stroke-width="1.8"><path d="M20.8 8.6c0-2.5-2-4.4-4.4-4.4-1.6 0-3 .9-3.8 2.1-.8-1.3-2.2-2.1-3.8-2.1-2.5 0-4.4 2-4.4 4.4 0 4.6 8.2 9.8 8.2 9.8s8.2-5.2 8.2-9.8Z"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="badge-row">
+          <span></span>
+          <span class="badge-stock">Останні одиниці</span>
+        </div>
+        <div class="card-visual v-audio"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Headphones.jpg?width=400" alt="Навушники Pulse Wave ANC" loading="lazy"></div>
+        <span class="card-cat">Аудіо</span>
+        <h3>Pulse Wave ANC — бездротові навушники</h3>
+        <div class="spec-sheet">
+          <div class="specline"><span class="lbl">Тип</span><span class="fill"></span><span class="val">Накладні, ANC</span></div>
+          <div class="specline"><span class="lbl">Автономність</span><span class="fill"></span><span class="val">до 40 год</span></div>
+          <div class="specline"><span class="lbl">З'єднання</span><span class="fill"></span><span class="val">Bluetooth 5.3</span></div>
+        </div>
+        <div class="price-row">
+          <span class="price-now">4 299 ₴</span>
+        </div>
+        <div class="card-footer">
+          <button class="btn-cart">До кошика</button>
+          <button class="btn-fav">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#5B6472" stroke-width="1.8"><path d="M20.8 8.6c0-2.5-2-4.4-4.4-4.4-1.6 0-3 .9-3.8 2.1-.8-1.3-2.2-2.1-3.8-2.1-2.5 0-4.4 2-4.4 4.4 0 4.6 8.2 9.8 8.2 9.8s8.2-5.2 8.2-9.8Z"/></svg>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="more-row">
+      <button class="btn-outline">Показати весь каталог</button>
+    </div>
+  </div>
+</section>
+
+<section class="promo" id="promo">
+  <div class="wrap">
+    <div class="promo-inner">
+      <div>
+        <h3>Здайте стару техніку — отримайте знижку до 3 000 ₴</h3>
+        <p>Приносьте будь-який робочий чи непрацюючий пристрій у магазин і отримайте знижку на нову покупку в день звернення.</p>
+      </div>
+      <button class="btn btn-primary">Дізнатись умови</button>
+    </div>
+  </div>
+</section>
+
+<footer id="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">com<span>fy</span></div>
+        <p>Мережа магазинів техніки та електроніки. Працюємо для того, щоб вибір гаджета не займав вихідні.</p>
+      </div>
+      <div>
+        <h4>Каталог</h4>
+        <ul>
+          <li><a href="#">Ноутбуки</a></li>
+          <li><a href="#">Смартфони</a></li>
+          <li><a href="#">Телевізори</a></li>
+          <li><a href="#">Аудіотехніка</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Покупцям</h4>
+        <ul>
+          <li><a href="#">Доставка й оплата</a></li>
+          <li><a href="#">Гарантія та сервіс</a></li>
+          <li><a href="#">Повернення товару</a></li>
+          <li><a href="#">Магазини на карті</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Контакти</h4>
+        <ul>
+          <li>0 148 867 333 — безкоштовно</li>
+          <li>support@fakecomfy.ua</li>
+          <li>Пн–Нд: 09:00–21:00</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 COMFY. Усі права захищені.</span>
+      <span>Демонстраційний макет сайту, не є реальним магазином.</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

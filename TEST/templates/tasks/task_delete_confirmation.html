@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<div>
+    <h2>Delete a task(Видалення завдання)</h2>
+    <p>Are you sure you want to delete the task?
+        (Ви впевнені, що хочете видалити завдання?)"{{object.title}}"</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Delete(Видалити)</button>
+        <a href="{% url 'tasks:task-list' %}" class="btn btn-secondary">No, return to task list
+            (Ні, повернутись до списку завдань)</a>
+    </form>
+</div>
+{% endblock %}
